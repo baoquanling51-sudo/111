@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>鸡腿沙威玛 B版</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:#f5e8c8;
+  user-select:none;
+}
+
+button{
+  font:inherit;
+  border:0;
+  cursor:pointer;
+}
+
+#game{
+  width:100%;
+  height:100%;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(#f9d99c 0 20%,#e9b66f 20% 22%,#d69b58 22% 100%);
+}
+
+/* 顶部 */
+
+.topbar{
+  height:72px;
+  background:#29251f;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 14px;
+  position:relative;
+  z-index:20;
+  box-shadow:0 3px 10px #0005;
+}
+
+.stat{
+  min-width:100px;
+  text-align:center;
+}
+
+.stat small{
+  display:block;
+  color:#cfc6b8;
+  font-size:12px;
+}
+
+.stat strong{
+  display:block;
+  font-size:21px;
+  margin-top:2px;
+}
+
+.money{
+  color:#ffd65a;
+}
+
+.day{
+  color:#fff;
+}
+
+.combo{
+  color:#ff8c55;
+}
+
+/* 顾客 */
+
+.customer-area{
+  position:absolute;
+  top:82px;
+  left:10px;
+  right:10px;
+  height:110px;
+  display:flex;
+  justify-content:center;
+  z-index:10;
+}
+
+.customer{
+  width:min(470px,95%);
+  background:#fffaf0;
+  border-radius:20px;
+  padding:10px 15px;
+  box-shadow:0 5px 15px #70441455;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.face{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  background:#f5c89d;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:40px;
+  flex:none;
+}
+
+.customer-info{
+  flex:1;
+}
+
+.customer-name{
+  font-size:16px;
+  font-weight:bold;
+}
+
+.order{
+  margin-top:4px;
+  font-size:14px;
+  color:#59462f;
+}
+
+.patience{
+  height:9px;
+  background:#ddd;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:7px;
+}
+
+#patienceBar{
+  height:100%;
+  width:100%;
+  background:#69b85b;
+  transition:width .1s linear;
+}
+
+/* 厨房 */
+
+.kitchen{
+  position:absolute;
+  left:0;
+  right:0;
+  top:195px;
+  bottom:0;
+  display:flex;
+  flex-direction:column;
+}
+
+/* 烤肉架 */
+
+grill{
+  display:block;
+}
+
+.grill{
+  height:190px;
+  background:
+    linear-gradient(#75695c,#4a423a);
+  border-top:8px solid #342f2a;
+  border-bottom:8px solid #302b27;
+  position:relative;
+  overflow:hidden;
+}
+
+.grill-title{
+  color:#f7d89b;
+  text-align:center;
+  font-weight:bold;
+  padding-top:7px;
+  font-size:14px;
+}
+
+.spit{
+  position:absolute;
+  left:50%;
+  top:42px;
+  transform:translateX(-50%);
+  width:100px;
+  height:125px;
+}
+
+.meat{
+  position:absolute;
+  left:25px;
+  top:5px;
+  width:50px;
+  height:105px;
+  border-radius:45% 45% 38% 38%;
+  background:
+    repeating-linear-gradient(
+      8deg,
+      #9a4327 0 8px,
+      #b9572e 8px 15px,
+      #75321f 15px 19px
+    );
+  box-shadow:inset 4px 0 0 #d36b37,inset -5px 0 0 #652619;
+  transition:.15s;
+}
+
+.meat.cut{
+  transform:rotate(-3deg) scale(.96);
+  filter:brightness(1.15);
+}
+
+.knife{
+  position:absolute;
+  right:-18px;
+  top:25px;
+  width:65px;
+  height:14px;
+  background:#d8dde2;
+  border-radius:4px 12px 12px 4px;
+  transform:rotate(-25deg);
+  opacity:.7;
+}
+
+.grill-help{
+  position:absolute;
+  bottom:5px;
+  width:100%;
+  text-align:center;
+  color:#fff;
+  font-size:13px;
+}
+
+/* 操作台 */
+
+.counter{
+  flex:1;
+  min-height:0;
+  background:
+    linear-gradient(#c78a4c,#a96838);
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.pita-area{
+  flex:1;
+  min-height:100px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+}
+
+.pita{
+  width:min(280px,70vw);
+  height:min(150px,35vw);
+  min-height:115px;
+  background:#f0c77d;
+  border-radius:50% 50% 42% 42%;
+  box-shadow:
+    inset 0 -10px 0 #dba65f,
+    0 8px 12px #5b2e1555;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+  transition:.2s;
+}
+
+.pita.open{
+  transform:scale(1.03);
+}
+
+.pita-label{
+  color:#8c6535;
+  font-size:13px;
+}
+
+.filling{
+  min-height:25px;
+  color:#4c2e19;
+  font-size:14px;
+  font-weight:bold;
+  text-align:center;
+  max-width:85%;
+}
+
+.sauce-line{
+  color:#bd442c;
+  letter-spacing:3px;
+}
+
+/* 按钮区 */
+
+.controls{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+  max-width:650px;
+  width:100%;
+  margin:auto;
+}
+
+.action{
+  min-height:54px;
+  border-radius:14px;
+  background:#fff5df;
+  color:#49321d;
+  box-shadow:0 3px 0 #8b5a30;
+  font-weight:bold;
+  font-size:13px;
+  padding:4px;
+}
+
+.action:active{
+  transform:translateY(3px);
+  box-shadow:0 0 0 #8b5a30;
+}
+
+.action.primary{
+  background:#ffcf55;
+}
+
+.action.sauce{
+  background:#f7a06a;
+}
+
+.action.wrap{
+  background:#e9e0c5;
+}
+
+.action:disabled{
+  opacity:.35;
+}
+
+/* 提示 */
+
+.message{
+  position:absolute;
+  left:50%;
+  bottom:145px;
+  transform:translateX(-50%);
+  background:#29251feF;
+  color:white;
+  padding:9px 18px;
+  border-radius:30px;
+  font-size:14px;
+  z-index:50;
+  pointer-events:none;
+  opacity:0;
+  transition:.2s;
+  white-space:nowrap;
+}
+
+.message.show{
+  opacity:1;
+}
+
+/* 收钱动画 */
+
+.coin{
+  position:absolute;
+  left:50%;
+  top:45%;
+  color:#ffd34e;
+  font-size:27px;
+  font-weight:bold;
+  z-index:100;
+  animation:coinUp 1s ease-out forwards;
+  pointer-events:none;
+}
+
+@keyframes coinUp{
+  0%{
+    transform:translate(-50%,0) scale(.7);
+    opacity:0;
+  }
+  20%{opacity:1;}
+  100%{
+    transform:translate(-50%,-90px) scale(1.25);
+    opacity:0;
+  }
+}
+
+/* 页面弹窗 */
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:#0008;
+  z-index:200;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal{
+  width:min(430px,100%);
+  background:#fff8e9;
+  border-radius:25px;
+  padding:28px 22px;
+  text-align:center;
+  box-shadow:0 15px 50px #0008;
+}
+
+.modal h1{
+  margin:0 0 10px;
+  color:#50331d;
+  font-size:28px;
+}
+
+.modal p{
+  color:#765c3e;
+  line-height:1.6;
+}
+
+.big-money{
+  font-size:42px;
+  color:#e49b18;
+  font-weight:bold;
+  margin:15px;
+}
+
+.start-btn{
+  width:100%;
+  padding:15px;
+  border-radius:16px;
+  background:#ffbf3c;
+  color:#422914;
+  font-weight:bold;
+  font-size:18px;
+  box-shadow:0 4px 0 #a76b19;
+}
+
+.start-btn:active{
+  transform:translateY(4px);
+  box-shadow:none;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* 手机 */
+
+@media(max-width:600px){
+  .topbar{
+    height:64px;
+  }
+
+  .customer-area{
+    top:72px;
+    height:105px;
+  }
+
+  .customer{
+    padding:8px 10px;
+  }
+
+  .face{
+    width:55px;
+    height:55px;
+    font-size:34px;
+  }
+
+  .kitchen{
+    top:180px;
+  }
+
+  .grill{
+    height:165px;
+  }
+
+  .controls{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .action{
+    min-height:48px;
+    font-size:12px;
+  }
+
+  .message{
+    bottom:135px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+  <!-- 顶部数据 -->
+  <div class="topbar">
+
+    <div class="stat day">
+      <small>营业日</small>
+      <strong>第 <span id="day">1</span> 天</strong>
+    </div>
+
+    <div class="stat money">
+      <small>总金币</small>
+      <strong>💰 <span id="totalMoney">0</span></strong>
+    </div>
+
+    <div class="stat">
+      <small>今日营业额</small>
+      <strong>💵 <span id="todayMoney">0</span></strong>
+    </div>
+
+    <div class="stat combo">
+      <small>连击</small>
+      <strong>🔥 <span id="combo">0</span></strong>
+    </div>
+
+  </div>
+
+  <!-- 顾客 -->
+  <div class="customer-area">
+
+    <div class="customer">
+
+      <div class="face" id="face">👨🏻</div>
+
+      <div class="customer-info">
+
+        <div class="customer-name">
+          <span id="customerName">阿明</span> 来了！
+        </div>
+
+        <div class="order">
+          我要：
+          <strong id="orderText">鸡肉 + 生菜 + 番茄 + 酱</strong>
+        </div>
+
+        <div class="patience">
+          <div id="patienceBar"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 厨房 -->
+  <div class="kitchen">
+
+    <!-- 烤肉 -->
+    <div class="grill">
+
+      <div class="grill-title">
+        🔥 鸡腿烤肉架
+      </div>
+
+      <div class="spit">
+
+        <div
+          class="meat"
+          id="meat"
+          ontouchstart="startCut(event)"
+          ontouchmove="moveCut(event)"
+          ontouchend="endCut(event)"
+          onmousedown="startCut(event)"
+        ></div>
+
+        <div class="knife"></div>
+
+      </div>
+
+      <div class="grill-help">
+        👆 点击或左右划动鸡肉进行切肉
+      </div>
+
+    </div>
+
+    <!-- 操作台 -->
+    <div class="counter">
+
+      <div class="pita-area">
+
+        <div class="pita" id="pita">
+
+          <div class="filling" id="filling">
+            🫓 空饼
+          </div>
+
+          <div class="pita-label" id="pitaLabel">
+            等待制作
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- 操作按钮 -->
+
+      <div class="controls">
+
+        <button
+          class="action primary"
+          id="meatBtn"
+          onclick="putMeat()"
+        >
+          🍗 放鸡肉
+        </button>
+
+        <button
+          class="action"
+          id="lettuceBtn"
+          onclick="addIngredient('lettuce')"
+        >
+          🥬 生菜
+        </button>
+
+        <button
+          class="action"
+          id="tomatoBtn"
+          onclick="addIngredient('tomato')"
+        >
+          🍅 番茄
+        </button>
+
+        <button
+          class="action sauce"
+          id="sauceBtn"
+          onclick="addSauce()"
+        >
+          🥫 挤酱
+        </button>
+
+        <button
+          class="action wrap"
+          id="wrapBtn"
+          onclick="wrapFood()"
+        >
+          🌯 包起来
+        </button>
+
+        <button
+          class="action primary"
+          id="serveBtn"
+          onclick="serve()"
+        >
+          💰 收钱
+        </button>
+
+        <button
+          class="action"
+          onclick="resetOrder()"
+        >
+          🗑️ 重做
+        </button>
+
+        <button
+          class="action"
+          onclick="showHelp()"
+        >
+          ❓ 帮助
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 提示 -->
+  <div class="message" id="message">
+    开始营业！
+  </div>
+
+  <!-- 开始 -->
+  <div class="overlay" id="startOverlay">
+
+    <div class="modal">
+
+      <h1>🍗 鸡腿沙威玛</h1>
+
+      <p>
+        欢迎来到你的第一家沙威玛小摊！<br>
+        接待顾客、切鸡肉、加配料、挤酱、打包，然后收钱。
+      </p>
+
+      <p>
+        <b>💰 钱会随着每个订单自动累积</b><br>
+        今天营业额每天重新计算，但你的总金币不会清零。
+      </p>
+
+      <button
+        class="start-btn"
+        onclick="startGame()"
+      >
+        🔥 开始营业
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- 每日结算 -->
+  <div class="overlay hidden" id="dayOverlay">
+
+    <div class="modal">
+
+      <h1>🌙 今日打烊</h1>
+
+      <p>第 <span id="closedDay">1</span> 天营业结束</p>
+
+      <div class="big-money">
+        💰 <span id="closedMoney">0</span>
+      </div>
+
+      <p>
+        今日营业额<br>
+        总金币仍然会继续累积
+      </p>
+
+      <button
+        class="start-btn"
+        onclick="nextDay()"
+      >
+        ☀️ 开始下一天
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- 帮助 -->
+  <div class="overlay hidden" id="helpOverlay">
+
+    <div class="modal">
+
+      <h1>📖 怎么玩</h1>
+
+      <p>
+        ① 点击/划动烤肉切肉<br>
+        ② 点击「放鸡肉」<br>
+        ③ 添加顾客要求的配料<br>
+        ④ 挤酱<br>
+        ⑤ 点击「包起来」<br>
+        ⑥ 点击「收钱」
+      </p>
+
+      <button
+        class="start-btn"
+        onclick="closeHelp()"
+      >
+        知道了
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =========================
+   游戏数据
+========================= */
+
+let day = 1;
+
+let totalMoney =
+  Number(localStorage.getItem("shawarmaMoney") || 0);
+
+let todayMoney = 0;
+
+let combo = 0;
+
+let gameRunning = false;
+
+let orderFinished = false;
+
+let cutCount = 0;
+
+let patience = 100;
+
+let patienceTimer = null;
+
+let dayTimer = null;
+
+let daySeconds = 75;
+
+let currentOrder = null;
+
+
+/* =========================
+   顾客资料
+========================= */
+
+const customers = [
+
+  {
+    name:"阿明",
+    face:"👨🏻"
+  },
+
+  {
+    name:"小美",
+    face:"👩🏻"
+  },
+
+  {
+    name:"老王",
+    face:"🧔🏻"
+  },
+
+  {
+    name:"小陈",
+    face:"👨🏼"
+  },
+
+  {
+    name:"莉莉",
+    face:"👩🏼"
+  },
+
+  {
+    name:"大叔",
+    face:"👨🏻‍🍳"
+  }
+
+];
+
+
+/* =========================
+   订单类型
+========================= */
+
+const orders = [
+
+  {
+    text:"鸡肉 + 生菜 + 番茄 + 酱",
+    lettuce:true,
+    tomato:true,
+    sauce:true
+  },
+
+  {
+    text:"鸡肉 + 生菜 + 酱",
+    lettuce:true,
+    tomato:false,
+    sauce:true
+  },
+
+  {
+    text:"鸡肉 + 番茄 + 酱",
+    lettuce:false,
+    tomato:true,
+    sauce:true
+  },
+
+  {
+    text:"鸡肉 + 生菜 + 番茄",
+    lettuce:true,
+    tomato:true,
+    sauce:false
+  },
+
+  {
+    text:"鸡肉 + 酱",
+    lettuce:false,
+    tomato:false,
+    sauce:true
+  }
+
+];
+
+
+/* =========================
+   初始化
+========================= */
+
+updateMoney();
+
+function updateMoney(){
+
+  document.getElementById("day").textContent = day;
+
+  document.getElementById("totalMoney").textContent =
+    totalMoney;
+
+  document.getElementById("todayMoney").textContent =
+    todayMoney;
+
+  document.getElementById("combo").textContent =
+    combo;
+
+}
+
+
+/* =========================
+   开始游戏
+========================= */
+
+function startGame(){
+
+  document.getElementById("startOverlay")
+    .classList.add("hidden");
+
+  gameRunning = true;
+
+  todayMoney = 0;
+
+  combo = 0;
+
+  updateMoney();
+
+  newCustomer();
+
+  startDayTimer();
+
+  message("🔥 开始营业！");
+
+}
+
+
+/* =========================
+   新顾客
+========================= */
+
+function newCustomer(){
+
+  if(!gameRunning) return;
+
+  clearInterval(patienceTimer);
+
+  let c =
+    customers[
+      Math.floor(Math.random()*customers.length)
+    ];
+
+  let o =
+    orders[
+      Math.floor(Math.random()*orders.length)
+    ];
+
+  currentOrder = o;
+
+  document.getElementById("customerName")
+    .textContent = c.name;
+
+  document.getElementById("face")
+    .textContent = c.face;
+
+  document.getElementById("orderText")
+    .textContent = o.text;
+
+  patience = 100;
+
+  document.getElementById("patienceBar")
+    .style.width = "100%";
+
+  resetOrder(false);
+
+  startPatience();
+
+}
+
+
+/* =========================
+   顾客耐心
+========================= */
+
+function startPatience(){
+
+  patienceTimer =
+    setInterval(()=>{
+
+      if(!gameRunning) return;
+
+      patience -= 0.35;
+
+      if(patience < 0)
+        patience = 0;
+
+      document.getElementById("patienceBar")
+        .style.width = patience + "%";
+
+      if(patience <= 0){
+
+        clearInterval(patienceTimer);
+
+        combo = 0;
+
+        updateMoney();
+
+        message("😡 顾客等不及走了！");
+
+        setTimeout(newCustomer,700);
+
+      }
+
+    },100);
+
+}
+
+
+/* =========================
+   切肉
+========================= */
+
+let cutting = false;
+let lastX = 0;
+
+function startCut(e){
+
+  if(!gameRunning) return;
+
+  cutting = true;
+
+  cutCount++;
+
+  document.getElementById("meat")
+    .classList.add("cut");
+
+  message("🔪 切肉！");
+
+  if(e.touches)
+    lastX = e.touches[0].clientX;
+  else
+    lastX = e.clientX;
+
+}
+
+
+function moveCut(e){
+
+  if(!cutting || !gameRunning) return;
+
+  let x;
+
+  if(e.touches)
+    x = e.touches[0].clientX;
+  else
+    x = e.clientX;
+
+  if(Math.abs(x-lastX) > 15){
+
+    cutCount++;
+
+    lastX = x;
+
+    document.getElementById("meat")
+      .classList.toggle("cut");
+
+  }
+
+}
+
+
+function endCut(){
+
+  cutting = false;
+
+  if(cutCount >= 3){
+
+    message("✅ 鸡肉切好了！");
+
+  }
+
+}
+
+
+/* =========================
+   放鸡肉
+========================= */
+
+let ingredients = {
+  meat:false,
+  lettuce:false,
+  tomato:false,
+  sauce:false
+};
+
+
+function putMeat(){
+
+  if(!gameRunning) return;
+
+  if(cutCount < 3){
+
+    message("🔪 先把鸡肉切好！");
+
+    return;
+
+  }
+
+  if(ingredients.meat){
+
+    message("🍗 已经放过鸡肉了");
+
+    return;
+
+  }
+
+  ingredients.meat = true;
+
+  refreshPita();
+
+  message("🍗 鸡肉放进饼里！");
+
+}
+
+
+/* =========================
+   加配料
+========================= */
+
+function addIngredient(type){
+
+  if(!gameRunning) return;
+
+  if(!ingredients.meat){
+
+    message("🍗 先放鸡肉！");
+
+    return;
+
+  }
+
+  if(type === "lettuce"){
+
+    if(!currentOrder.lettuce){
+
+      message("❌ 这个顾客没要生菜！");
+
+      return;
+
+    }
+
+    if(ingredients.lettuce){
+
+      message("🥬 已经加过生菜了");
+
+      return;
+
+    }
+
+    ingredients.lettuce = true;
+
+    message("🥬 生菜加好了！");
+
+  }
+
+
+  if(type === "tomato"){
+
+    if(!currentOrder.tomato){
+
+      message("❌ 这个顾客没要番茄！");
+
+      return;
+
+    }
+
+    if(ingredients.tomato){
+
+      message("🍅 已经加过番茄了");
+
+      return;
+
+    }
+
+    ingredients.tomato = true;
+
+    message("🍅 番茄加好了！");
+
+  }
+
+  refreshPita();
+
+}
+
+
+/* =========================
+   挤酱
+========================= */
+
+function addSauce(){
+
+  if(!gameRunning) return;
+
+  if(!ingredients.meat){
+
+    message("🍗 先放鸡肉！");
+
+    return;
+
+  }
+
+  if(!currentOrder.sauce){
+
+    message("❌ 这个顾客没有要酱！");
+
+    return;
+
+  }
+
+  if(ingredients.sauce){
+
+    message("🥫 已经挤过酱了");
+
+    return;
+
+  }
+
+  ingredients.sauce = true;
+
+  refreshPita();
+
+  message("🥫 挤酱完成！");
+
+}
+
+
+/* =========================
+   更新饼
+========================= */
+
+function refreshPita(){
+
+  let arr = [];
+
+  if(ingredients.meat)
+    arr.push("🍗鸡肉");
+
+  if(ingredients.lettuce)
+    arr.push("🥬生菜");
+
+  if(ingredients.tomato)
+    arr.push("🍅番茄");
+
+  if(ingredients.sauce)
+    arr.push("🥫酱");
+
+  let filling =
+    document.getElementById("filling");
+
+  let label =
+    document.getElementById("pitaLabel");
+
+  if(arr.length === 0){
+
+    filling.textContent = "🫓 空饼";
+
+    label.textContent = "等待制作";
+
+  }else{
+
+    filling.innerHTML =
+      arr.join(" ＋ ");
+
+    label.textContent =
+      "正在制作……";
+
+  }
+
+}
+
+
+/* =========================
+   打包
+========================= */
+
+function wrapFood(){
+
+  if(!gameRunning) return;
+
+  if(!ingredients.meat){
+
+    message("🍗 里面还没有鸡肉！");
+
+    return;
+
+  }
+
+  if(currentOrder.lettuce &&
+     !ingredients.lettuce){
+
+    message("🥬 顾客还要生菜！");
+
+    return;
+
+  }
+
+  if(currentOrder.tomato &&
+     !ingredients.tomato){
+
+    message("🍅 顾客还要番茄！");
+
+    return;
+
+  }
+
+  if(currentOrder.sauce &&
+     !ingredients.sauce){
+
+    message("🥫 顾客还要酱！");
+
+    return;
+
+  }
+
+  orderFinished = true;
+
+  document.getElementById("pita")
+    .classList.add("open");
+
+  document.getElementById("pitaLabel")
+    .textContent = "🌯 已经包好了！";
+
+  message("✨ 完美！现在收钱！");
+
+}
+
+
+/* =========================
+   收钱
+========================= */
+
+function serve(){
+
+  if(!gameRunning) return;
+
+  if(!orderFinished){
+
+    message("🌯 先把沙威玛做好再收钱！");
+
+    return;
+
+  }
+
+  clearInterval(patienceTimer);
+
+  let base = 10 + day * 2;
+
+  let tip =
+    Math.floor(Math.random()*6);
+
+  let comboBonus =
+    combo >= 2 ? 3 : 0;
+
+  let earn =
+    base + tip + comboBonus;
+
+  totalMoney += earn;
+
+  todayMoney += earn;
+
+  combo++;
+
+  updateMoney();
+
+  coinAnimation(earn);
+
+  if(combo >= 3){
+
+    message(
+      "🔥 "+combo+" 连击！ +" + earn + " 金币"
+    );
+
+  }else{
+
+    message(
+      "💰 收到 "+earn+" 金币！"
+    );
+
+  }
+
+  setTimeout(()=>{
+
+    if(gameRunning)
+      newCustomer();
+
+  },850);
+
+}
+
+
+/* =========================
+   重做
+========================= */
+
+function resetOrder(show=true){
+
+  ingredients = {
+    meat:false,
+    lettuce:false,
+    tomato:false,
+    sauce:false
+  };
+
+  orderFinished = false;
+
+  cutCount = 0;
+
+  document.getElementById("meat")
+    .classList.remove("cut");
+
+  document.getElementById("pita")
+    .classList.remove("open");
+
+  refreshPita();
+
+  if(show)
+    message("🗑️ 重新做一份");
+
+}
+
+
+/* =========================
+   金币动画
+========================= */
+
+function coinAnimation(amount){
+
+  let coin =
+    document.createElement("div");
+
+  coin.className = "coin";
+
+  coin.textContent =
+    "💰 +" + amount;
+
+  document.getElementById("game")
+    .appendChild(coin);
+
+  setTimeout(()=>{
+    coin.remove();
+  },1000);
+
+}
+
+
+/* =========================
+   每日时间
+========================= */
+
+function startDayTimer(){
+
+  clearTimeout(dayTimer);
+
+  dayTimer =
+    setTimeout(()=>{
+
+      closeDay();
+
+    },daySeconds*1000);
+
+}
+
+
+/* =========================
+   打烊
+========================= */
+
+function closeDay(){
+
+  gameRunning = false;
+
+  clearInterval(patienceTimer);
+
+  document.getElementById("closedDay")
+    .textContent = day;
+
+  document.getElementById("closedMoney")
+    .textContent = todayMoney;
+
+  document.getElementById("dayOverlay")
+    .classList.remove("hidden");
+
+}
+
+
+/* =========================
+   下一天
+========================= */
+
+function nextDay(){
+
+  day++;
+
+  todayMoney = 0;
+
+  combo = 0;
+
+  updateMoney();
+
+  document.getElementById("dayOverlay")
+    .classList.add("hidden");
+
+  gameRunning = true;
+
+  newCustomer();
+
+  startDayTimer();
+
+  message(
+    "☀️ 第 "+day+" 天开张！"
+  );
+
+}
+
+
+/* =========================
+   提示
+========================= */
+
+let messageTimer = null;
+
+function message(text){
+
+  let box =
+    document.getElementById("message");
+
+  box.textContent = text;
+
+  box.classList.add("show");
+
+  clearTimeout(messageTimer);
+
+  messageTimer =
+    setTimeout(()=>{
+
+      box.classList.remove("show");
+
+    },1300);
+
+}
+
+
+/* =========================
+   帮助
+========================= */
+
+function showHelp(){
+
+  document.getElementById("helpOverlay")
+    .classList.remove("hidden");
+
+}
+
+
+function closeHelp(){
+
+  document.getElementById("helpOverlay")
+    .classList.add("hidden");
+
+}
+
+
+/* =========================
+   保存金币
+========================= */
+
+setInterval(()=>{
+
+  localStorage.setItem(
+    "shawarmaMoney",
+    totalMoney
+  );
+
+},1000);
+
+
+/* =========================
+   防止 iPad 滑动页面
+========================= */
+
+document.addEventListener(
+  "touchmove",
+  function(e){
+
+    if(e.target.closest(".meat"))
+      e.preventDefault();
+
+  },
+  {passive:false}
+);
+
+
+/* =========================
+   鼠标松开
+========================= */
+
+document.addEventListener(
+  "mouseup",
+  function(){
+
+    cutting = false;
+
+  }
+);
+
+</script>
+
+</body>
+</html>
